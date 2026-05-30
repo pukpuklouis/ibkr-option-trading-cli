@@ -1,0 +1,16 @@
+[connection]
+# TWS: 7496 (live), 7497 (paper)
+# IB Gateway: 4001 (live), 4002 (paper)
+host = "127.0.0.1"
+port = 7497
+client_id = 101
+
+[account]
+# Your IBKR account ID (optional, auto-detected if not set)
+# default_account = "DU1234567"
+
+[display]
+# Target refresh rate in milliseconds (33 ≈ 30fps)
+refresh_rate_ms = 33
+# "default" or "dark"
+color_scheme = "default"
