@@ -3,6 +3,43 @@
 > Pure Rust option trading CLI using `ibapi` (TWS-native) + `ratatui` TUI.
 > MVP: option chain quotes, real-time OPRA-level pricing, order placement.
 
+## Inspired By OpenAlice
+
+This project draws inspiration from [OpenAlice](https://github.com/TraderAlice/OpenAlice)
+(~/Dev/OpenAlice), a TypeScript AI trading agent. Key learnings from its architecture:
+
+### Patterns We Adopt (not reimplement TWS from scratch)
+
+| OpenAlice (`packages/ibkr`) | Our approach |
+|---|---|
+| Full TWS wire protocol in TS (~200 files) | **`ibapi` crate** (already handles this in Rust) |
+| Custom protobuf message definitions | **`ibapi` v3.0** protobuf wire format |
+| Custom async request multiplexer | **`ibapi`'s `Subscription<T>`** streaming model |
+
+### Patterns We Steal
+
+1. **Contract Builder** (`contract-builder.ts`) — validated contract construction with sensible defaults
+   (SMART routing, USD currency, required fields per sec type). We'll build `Contract::builder()` in Rust.
+
+2. **IBKR Error Classification** (`ibkr-contracts.ts`) — numeric error codes → typed errors
+   (502→NETWORK, 326→AUTH, 200→EXCHANGE). We'll implement in `error.rs`.
+
+3. **Unified Broker Interface** (`IBroker`) — clean trait with `init/close/getAccount/getPositions/placeOrder/getQuote`.
+   Even with only IBKR, the pattern keeps things modular.
+
+4. **Position Math with Multiplier Awareness** — caught multiplier=1 bug for options (100x wrong values).
+   We always fetch real multiplier from contract details.
+
+### What OpenAlice Leaves for Us
+
+| Feature | OpenAlice | Our CLI |
+|---|---|---|
+| TUI option chain | ❌ No terminal UI | ✅ ratatui interactive table |
+| Real-time streaming | ❌ Snapshot-only (`getQuote()`) | ✅ tick-by-tick bid/ask |
+| Keyboard order entry | ❌ AI-driven only | ✅ tui-textarea form |
+| Headless CLI | ❌ No subcommands | ✅ `ibkr chain/watch/trade` |
+| Single binary | ❌ Node.js monorepo | ✅ Pure Rust, static binary |
+
 ## Module Dependency Graph
 
 ```

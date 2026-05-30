@@ -148,3 +148,16 @@ src/
 ## License
 
 MIT
+
+## Inspiration
+
+This project is inspired by [OpenAlice](https://github.com/TraderAlice/OpenAlice) —
+an open-source AI trading agent (cloned at ~/Dev/OpenAlice). While OpenAlice is a
+TypeScript/Node.js monorepo focusing on AI-driven multi-broker trading, our project
+distills the IBKR option trading experience into a fast, native Rust TUI and CLI.
+
+Key architectural patterns borrowed from OpenAlice:
+- **Validated contract construction** — enforced required fields per security type
+- **IBKR error classification** — numeric error codes → typed, actionable errors
+- **Clean broker interface design** — modular separation of concerns
+
