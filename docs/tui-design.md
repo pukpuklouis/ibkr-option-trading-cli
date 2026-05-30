@@ -14,20 +14,22 @@
 │                                 │ STRATEGIES PANEL               │
 │ OPTION CHAIN TABLE              │ • Call Credit Spread           │ ◄ 50%
 │ OI | Call Ltp | STRIKE | Put   │ • Put Credit Spread            │
-│ ██ | 108.3    | 26200◄ | 65.8  │ •▶Put Debit Spread             │
-│ █  |  65.8    | 26100◄ | 42.1  │ • Call Debit Spread            │
-│    |  42.1    | 26000   | 33.5 │ • Iron Condor                  │
-│    +1 BUY 26200 (green badge)  │ • Butterfly                    │
-│    -1 SELL 26100 (red badge)   │                                │
+│ ██ | 24.50    | 150◄   | 4.80  │ •▶Put Debit Spread             │
+│ █  | 10.20    | 145◄   | 8.30  │ • Call Debit Spread            │
+│    |  6.80    | 140◄   | 12.10 │ • Iron Condor                  │
+│    |  4.30    | 135    | 18.40 │ • Butterfly                    │
+│    |  2.60    | 130    | 25.70 │                                │
+│    +1 BUY 145C (green badge)  │                                │
+│    -1 SELL 150C (red badge)   │                                │
 ├─────────────────────────────────┴────────────────────────────────┤
 │ ANALYSIS PANEL (left)        │ PAYOFF GRAPH (right)              │ ◄ 30%
 │ Active Legs:                 │  ┌──────────────────────────────┐ │
-│   +1 BUY PE @108.3 26200    │  │  P&L vs Underlying           │ │
-│   -1 SELL PE @65.8  26100   │  │  ──┐                   ┌──── │ │
+│   +1 BUY CALL @10.20 145    │  │  P&L vs Underlying           │ │
+│   -1 SELL CALL @24.50 150   │  │  ──┐                   ┌──── │ │
 │                              │  │    └──────────────────┘      │ │
-│ Max Profit: ₹3,734          │  │  0 ── Spot ──────────────     │ │
-│ Max Loss:   -₹2,765         │  │              ┌────────        │ │
-│ Breakeven:  26157           │  │              │                │ │
+│ Max Profit: $1,430          │  │  0 ── Spot ──────────────     │ │
+│ Max Loss:   -$570           │  │              ┌────────        │ │
+│ Breakeven:  145.70          │  │              │                │ │
 └──────────────────────────────┴──┴──────────────────────────────┘
 ```
 
@@ -38,15 +40,15 @@
 ### 1. Top Status Bar (5% of screen)
 
 ```
-Nifty 50  26129.60  Exp:2026-01-06 │ Last: POS(26200/26100)
-LIVE MARKET DATA            q:quit  ↑↓:nav  S:shortcuts
+NVDA  131.42  Exp:2026-09-18 │ Last: POS(145/150 Bull Call Spread)
+LIVE MARKET DATA        q:quit  ↑↓:nav  S:shortcuts
 ```
 
 | Element | Description |
 |---|---|
-| Symbol | Market ticker + current underlying price |
+| Symbol | Nasdaq ticker + current underlying price (e.g., NVDA $131.42, GLD $263.80) |
 | Expiry | Currently selected option expiry date |
-| Last Action | Short summary of recent action (e.g., `POS(26200/26100)`) |
+| Last Action | Short summary of recent action (e.g., `POS(145/150 Bull Call)`) |
 | Status Badge | `LIVE MARKET DATA` / `DELAYED` / `DISCONNECTED` with color coding |
 | Keybinding Hints | Compact hints: `q` quit, `↑↓` navigate, `S` shortcuts |
 
@@ -56,21 +58,22 @@ The core data display, modeled after tastyworks:
 
 ```
 CALL OI  Call LTP │ STRIKE │ Put LTP  PUT OI
-   ████    108.3  │  26200◄│   65.8     ██████  ← Active: +1 BUY (green)
-   ███      65.8  │  26100◄│   42.1     █████   ← Active: -1 SELL (red/orange)
-   ██       42.1  │  26000 │   33.5     ███
-   █        33.0  │  25900 │   25.8     ██
-                   │  25800 │   18.2     █
+   █████   24.50  │  150◄  │   4.80     █████  ← Active: -1 SELL CALL (red)
+   ████    10.20  │  145◄  │   8.30     ████   ← Active: +1 BUY CALL (green)
+   ███      6.80  │  140◄  │  12.10     ██████ ← ATM
+   ██       4.30  │  135   │  18.40     ████████
+   █        2.60  │  130   │  25.70     ██████████
+                   │  125   │  35.50     ████████████
 ```
 
 | Column | Details |
 |---|---|
 | **OI Bar** (Call side) | Horizontal bar chart proportional to Open Interest, green color |
 | **Call LTP** | Last traded price for the call option |
-| **STRIKE** | Centered, bold. ATM strike has distinctive background highlight |
+| **STRIKE** | Centered, bold. ATM strike (`◄`) has distinctive background highlight |
 | **Put LTP** | Last traded price for the put option |
 | **OI Bar** (Put side) | Horizontal bar chart proportional to Open Interest, red color |
-| **Position Overlay** | Colored `+1 BUY` / `-1 SELL` badges on strikelines with existing positions |
+| **Position Overlay** | Colored `+1 BUY` / `-1 SELL` badges on strikes with existing positions |
 
 Key UX patterns:
 - Strike column visually separates calls (left) from puts (right)
@@ -103,14 +106,14 @@ Quick-select menu of common multi-leg option strategies:
 
 ```
 Active Legs:
-  +1 BUY  PE @108.3  Str: 26200
-  -1 SELL PE @ 65.8  Str: 26100
+  +1 BUY  CALL @10.20  Str: 145
+  -1 SELL CALL @24.50  Str: 150
 
-Max Profit:  ₹3,734
-Max Loss:   -₹2,765
-Breakeven:   26157
-Net Premium: ₹42.50
-Delta:       0.35 (bearish)
+Max Profit:  $1,430
+Max Loss:    -$570
+Breakeven:   145.70
+Net Premium: $14.30 (credit)
+Delta:       0.28 (bullish)
 ```
 
 | Metric | Description |
@@ -126,14 +129,14 @@ Delta:       0.35 (bearish)
 
 ```
         ┌──────────────────────────────┐
-₹3,700 ┤                    ┌─────────┐
+$2,000 ┤                    ┌─────────┐
         │                    │         │
         │                  ┌─┘         │
-  ₹0   ┤──────────────────┘           │
+  $0   ┤──────────────────┘           │
         │           Spot ▼             │
         │                        ┌─────┘
--₹3,000 ┤────────────────────────┘
-        │                 26050         │
+-$1,000 ┤────────────────────────┘
+        │                 130    145     │
         └──────────────────────────────┘
 ```
 
@@ -205,18 +208,18 @@ STRATEGY MODE (Phase 2)
 ### Phase 1 (MVP) — Minimal Layout
 
 ```
-┌── Top Bar: Symbol, Price, Status ──────────────────────────────┐
+┌── NVDA  131.42 │ Connected │ 14:30:00 ─────────────────────────┐
 ├── Option Chain Table (full width): Call | Strike | Put ────────┤
 │   Bid/Ask/Delta      Bid/Ask/Delta                              │
 ├── Order Entry Form ─────────────────────────────────────────────┤
-├── Status Bar: Positions, P&L, Orders ───────────────────────────┤
+├── Positions: +2 calls │ P&L: +$120 │ Orders: #1042 Filled ─────┤
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ### Phase 2 — Add Analysis
 
 ```
-┌── Top Bar ───────────────────────────────────────┐
+┌── NVDA  131.42 │ Connected ────────────────────────────────────┐
 ├── Chain Table (70%)         │ Strategies (30%) ──┤
 ├── Analysis (50%)            │ Payoff Graph (50%) ┤
 └─────────────────────────────┴────────────────────┘
@@ -225,7 +228,7 @@ STRATEGY MODE (Phase 2)
 ### Phase 3 — Full Layout
 
 ```
-┌── Top Bar ───────────────────────────────────────┐
+┌── NVDA  131.42 │ Connected ────────────────────────────────────┐
 ├── Chain Table (70%)         │ Strategies (30%) ──┤
 │  + OI bars, position badges                      │
 ├── Analysis (50%)            │ Payoff Graph (50%) ┤
