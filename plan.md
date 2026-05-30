@@ -288,6 +288,34 @@ IB Gateway ↔ ibapi socket ↔ IBRClient (tokio task)
 
 ---
 
+## TUI Design Reference
+
+Our TUI is inspired by a tastyworks-style option trading terminal.
+See [`docs/tui-design.md`](docs/tui-design.md) for the full design document including:
+
+- **Five-zone layout**: Top Bar, Chain Table, Strategies, Analysis, Payoff Graph
+- **Input state machine**: Normal → Order Entry → Search modes
+- **Color scheme**: Bid green, ask red, ATM highlight, OI bars
+- **Phase 1-3 evolution**: minimal → full tastyworks-style layout
+- **ratatui widget mapping**: Table, List, Gauge, Canvas for each zone
+
+### Phased Feature Additions
+
+| Feature | Phase | Description |
+|---|---|---|
+| Minimal chain table (bid/ask/strike) | 1 | Core MVP |
+| Order entry form | 1 | Market/limit orders |
+| Status bar | 1 | Connection, positions, P&L |
+| Strategies panel | 2 | Quick-select spreads |
+| OI/Volume bar visualization | 2 | Horizontal bars on chain |
+| Active position overlay | 2 | Colored BUY/SELL badges |
+| Payoff diagram | 2 | ASCII P&L chart |
+| Analysis panel | 2 | Max profit/loss, breakeven |
+| Keybinding help overlay | 2+ | `Shift+S` modal |
+| Strategy builder | 3 | Multi-leg spread construction |
+
+---
+
 ## File Tree (Final)
 
 ```
@@ -313,7 +341,9 @@ ibkr-option-trading-cli/
 │       ├── status_bar.rs    # Status/account bar widget
 │       └── events.rs        # Event reader + key mapping
 └── docs/
-    └── architecture.md      # Detailed design doc
+    ├── architecture.md      # Detailed design doc
+    ├── tui-design.md        # TUI layout, color scheme, input modes
+    └── inspiration-from-openalice.md  # OpenAlice borrowing reference
 ```
 
 ## Validation Plan
